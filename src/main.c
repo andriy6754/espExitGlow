@@ -1,26 +1,57 @@
+#include "esp_log.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "led_strip.h"
 #include <stdio.h>
 
-#include "driver/gpio.h" //for gpio functions
-#include "freertos/FreeRTOS.h" //it's required for a vTaskDelay()
+#define LED_STRIP_GPIO_PIN 4
+#define LED_STRIP_NUM_LEDS 16
+#define BLINK_PERIOD_MS 1000
 
-const gpio_num_t LED_PIN = GPIO_NUM_4;
-const uint32_t SLEEP = 1000;
+static const char *TAG = "led_strip";
+static led_strip_handle_t s_strip = NULL;
 
-void app_main(void) // u can't init main function, because it is declared in espidf files
-// app_main exact the same as main
-{
-	uint8_t ledState = 0;
-	gpio_reset_pin(LED_PIN);
-	gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
+static void configure_led_strip(void) {
+    led_strip_config_t strip_config = {.strip_gpio_num = LED_STRIP_GPIO_PIN,
+                                       .max_leds = LED_STRIP_NUM_LEDS,
+                                       .led_model = LED_MODEL_WS2812,
+                                       .color_component_format = LED_STRIP_COLOR_COMPONENT_FMT_GRB,
+                                       .flags = {
+                                           .invert_out = false,
+                                       }};
 
-	while(1){
-		ledState = !ledState;
-		gpio_set_level(LED_PIN, ledState);
+    led_strip_rmt_config_t rmt_config = {.clk_src = RMT_CLK_SRC_DEFAULT,
+                                         .resolution_hz = 10 * 1000 * 1000,
+                                         .mem_block_symbols = 0,
+                                         .flags = {
+                                             .with_dma = false,
+                                         }};
 
-		printf("LED state: %d\n", ledState);
+    ESP_ERROR_CHECK(led_strip_new_rmt_device(&strip_config, &rmt_config, &s_strip));
+    ESP_LOGI(TAG, "LED strip initialized on GPIO %d (%d LEDs)", LED_STRIP_GPIO_PIN, LED_STRIP_NUM_LEDS);
+}
 
-		vTaskDelay(SLEEP/portTICK_PERIOD_MS);
-	}
+void app_main(void) {
+    configure_led_strip();
 
+    bool strip_on = false;
 
+    while (1) {
+        strip_on = !strip_on;
+
+        if (strip_on) {
+            // Turn all LEDs ON
+            for (int i = 0; i < LED_STRIP_NUM_LEDS; i++) {
+                ESP_ERROR_CHECK(led_strip_set_pixel(s_strip, i, 0, 255, 0));
+            }
+            ESP_ERROR_CHECK(led_strip_refresh(s_strip));
+            ESP_LOGI(TAG, "LED Strip: ON");
+        } else {
+            // Turn all LEDs OFF
+            ESP_ERROR_CHECK(led_strip_clear(s_strip));
+            ESP_LOGI(TAG, "LED Strip: OFF");
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(BLINK_PERIOD_MS));
+    }
 }

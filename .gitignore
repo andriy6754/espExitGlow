@@ -53,3 +53,18 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# ESP-IDF build & config files
+build/
+sdkconfig
+sdkconfig.old
+sdkconfig.ci
+managed_components/
+
+# macOS system files
+.DS_Store
+._*
+
+# Sensitive credentials & environment files
+secrets.h
+*.env
