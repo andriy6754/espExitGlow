@@ -17,6 +17,25 @@
 static const char *TAG = "led_strip";
 static led_strip_handle_t s_strip = NULL;
 
+static void configure_led_strip(void);
+
+static EventGroupHandle_t s_wifi_eg;
+#define WIFI_CONNECTED_BIT BIT0
+
+// Wi-Fi event handler
+static void wifi_evt(void *arg, esp_event_base_t base, int32_t id, void *data);
+
+// Initialize Wi-Fi and wait for connection
+static void wifi_init(void);
+
+void alert_strip(const int led_number, const char oblast[]);
+
+void app_main(void) {
+    configure_led_strip();
+    wifi_init();
+    alert_strip(16, "м. Київ");
+}
+
 static void configure_led_strip(void) {
     led_strip_config_t strip_config = {.strip_gpio_num = LED_STRIP_GPIO_PIN,
                                        .max_leds = LED_STRIP_NUM_LEDS,
@@ -37,10 +56,6 @@ static void configure_led_strip(void) {
     ESP_LOGI(TAG, "LED strip initialized on GPIO %d (%d LEDs)", LED_STRIP_GPIO_PIN, LED_STRIP_NUM_LEDS);
 }
 
-static EventGroupHandle_t s_wifi_eg;
-#define WIFI_CONNECTED_BIT BIT0
-
-// Wi-Fi event handler
 static void wifi_evt(void *arg, esp_event_base_t base, int32_t id, void *data) {
     if (base == WIFI_EVENT && id == WIFI_EVENT_STA_START)
         esp_wifi_connect();
@@ -50,7 +65,6 @@ static void wifi_evt(void *arg, esp_event_base_t base, int32_t id, void *data) {
         xEventGroupSetBits(s_wifi_eg, WIFI_CONNECTED_BIT);
 }
 
-// Initialize Wi-Fi and wait for connection
 static void wifi_init(void) {
     esp_err_t r = nvs_flash_init();
     if (r == ESP_ERR_NVS_NO_FREE_PAGES || r == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -73,27 +87,20 @@ static void wifi_init(void) {
     xEventGroupWaitBits(s_wifi_eg, WIFI_CONNECTED_BIT, pdFALSE, pdTRUE, portMAX_DELAY);
 }
 
-void app_main(void) {
-    wifi_init();
-    configure_led_strip();
-
-    bool strip_on = false;
-
-    const char oblast[] = "м. Київ";
-
+void alert_strip(const int led_number, const char oblast[]) {
     while (1) {
-        strip_on = !strip_on;
+        int alert_status = air_alert_check(oblast);
 
-        if (air_alert_check(oblast) == 0) {
+        if (alert_status == 0) {
             // Turn all LEDs green if no alert
-            for (int i = 0; i < LED_STRIP_NUM_LEDS; i++) {
+            for (int i = 0; i < led_number; i++) {
                 ESP_ERROR_CHECK(led_strip_set_pixel(s_strip, i, 0, 255, 0));
             }
             ESP_ERROR_CHECK(led_strip_refresh(s_strip));
             ESP_LOGI(TAG, "LED Strip is green");
-        } else if (air_alert_check(oblast) == 1) {
+        } else if (alert_status == 1) {
             // Turn all LEDs red if there is an alert
-            for (int i = 0; i < LED_STRIP_NUM_LEDS; i++) {
+            for (int i = 0; i < led_number; i++) {
                 ESP_ERROR_CHECK(led_strip_set_pixel(s_strip, i, 255, 0, 0));
             }
             ESP_ERROR_CHECK(led_strip_refresh(s_strip));
