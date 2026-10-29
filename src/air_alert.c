@@ -1,9 +1,15 @@
+#include "../include/air_alert.h"
+#include "../include/led.h"
 #include "esp_crt_bundle.h"
 #include "esp_http_client.h"
 #include "esp_log.h"
 #include "esp_timer.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include <cJSON.h>
 #include <string.h>
+
+#define BLINK_PERIOD_MS 1000
 
 static const char TAG[] = "air_alert";
 static const char URL[] = "https://ubilling.net.ua/aerialalerts/";
@@ -49,4 +55,32 @@ int air_alert_check(const char region[]) {
     esp_http_client_cleanup(c);
     last_result = result;
     return result;
+}
+
+void alert_strip_task(void *arg) {
+    (void)arg;
+    const char *oblast = "м. Київ";
+    led_strip_handle_t strip = get_led_strip();
+
+    while (1) {
+        int alert_status = air_alert_check(oblast);
+
+        if (alert_status == 0) {
+            // Turn all LEDs green if no alert
+            for (int i = 0; i < LED_STRIP_NUM_LEDS; i++) {
+                ESP_ERROR_CHECK(led_strip_set_pixel(strip, i, 0, 255, 0));
+            }
+            ESP_ERROR_CHECK(led_strip_refresh(strip));
+            ESP_LOGI(TAG, "LED Strip is green");
+        } else if (alert_status == 1) {
+            // Turn all LEDs red if there is an alert
+            for (int i = 0; i < LED_STRIP_NUM_LEDS; i++) {
+                ESP_ERROR_CHECK(led_strip_set_pixel(strip, i, 255, 0, 0));
+            }
+            ESP_ERROR_CHECK(led_strip_refresh(strip));
+            ESP_LOGI(TAG, "LED Strip is red");
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(BLINK_PERIOD_MS));
+    }
 }
