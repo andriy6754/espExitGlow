@@ -16,3 +16,4 @@ dependencies:
   #   public: true
   espressif/led_strip: '*'
   espressif/cjson: '*'
+  heronet/tm1637: '*'
