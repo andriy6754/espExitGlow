@@ -24,7 +24,7 @@
       "type": "wokwi-tm1637-7segment",
       "id": "display1",
       "top": 100,
-      "left": 120,
+      "left": -200,
       "attrs": {}
     }
   ],
