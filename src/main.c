@@ -2,17 +2,20 @@
 #include "esp_event.h"
 #include "esp_log.h"
 #include "esp_netif.h"
+#include "esp_netif_sntp.h"
 #include "esp_wifi.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
 #include "freertos/task.h"
 #include "led_strip.h"
 #include "nvs_flash.h"
+#include "tm1637.h"
 #include <stdio.h>
 
 #define LED_STRIP_GPIO_PIN 4
 #define LED_STRIP_NUM_LEDS 16
 #define BLINK_PERIOD_MS 1000
+#define TIME_UPDATE_PERIOD_MS 1000
 
 static const char *TAG = "led_strip";
 static led_strip_handle_t s_strip = NULL;
@@ -28,12 +31,26 @@ static void wifi_evt(void *arg, esp_event_base_t base, int32_t id, void *data);
 // Initialize Wi-Fi and wait for connection
 static void wifi_init(void);
 
+static void alert_strip_task(void *arg);
+static void tm1637_show_time_task(void *arg);
+
+void tm1637_show_time(void);
+
 void alert_strip(const int led_number, const char oblast[]);
 
 void app_main(void) {
     configure_led_strip();
     wifi_init();
-    alert_strip(16, "м. Київ");
+
+    // Sync the system clock, otherwise time(NULL) starts at 1970 and the display shows 0200
+    esp_sntp_config_t sntp_cfg = ESP_NETIF_SNTP_DEFAULT_CONFIG("pool.ntp.org");
+    ESP_ERROR_CHECK(esp_netif_sntp_init(&sntp_cfg));
+    if (esp_netif_sntp_sync_wait(pdMS_TO_TICKS(15000)) != ESP_OK) {
+        ESP_LOGW(TAG, "SNTP sync timed out, time may be wrong");
+    }
+
+    configASSERT(xTaskCreate(alert_strip_task, "alert_strip", 4096, NULL, 5, NULL) == pdPASS);
+    configASSERT(xTaskCreate(tm1637_show_time_task, "tm1637_time", 2048, NULL, 5, NULL) == pdPASS);
 }
 
 static void configure_led_strip(void) {
@@ -109,4 +126,42 @@ void alert_strip(const int led_number, const char oblast[]) {
 
         vTaskDelay(pdMS_TO_TICKS(BLINK_PERIOD_MS));
     }
+}
+
+static void alert_strip_task(void *arg) {
+    (void)arg;
+    alert_strip(LED_STRIP_NUM_LEDS, "м. Київ");
+}
+
+void display_time(tm1637_handle_t display, int hour, int minute) {
+    // Format: HH:MM (use colon segment if available)
+    uint8_t time_display[4];
+    time_display[0] = tm1637_encode_digit(hour / 10);
+    time_display[1] = tm1637_encode_digit(hour % 10) | TM1637_SEG_DP;
+    time_display[2] = tm1637_encode_digit(minute / 10);
+    time_display[3] = tm1637_encode_digit(minute % 10);
+
+    tm1637_set_segments(display, time_display, 4, 0);
+}
+
+void tm1637_show_time(void) {
+    // Configure pins
+    tm1637_config_t config = {.clk_pin = GPIO_NUM_16, .dio_pin = GPIO_NUM_17, .bit_delay_us = 100};
+
+    // Initialize display
+    tm1637_handle_t display;
+    tm1637_init(&config, &display);
+
+    // Set brightness (0-7)
+    tm1637_set_brightness(display, 5, true);
+
+    while (1) {
+        display_time(display, get_current_hour(), get_current_minute());
+        vTaskDelay(pdMS_TO_TICKS(TIME_UPDATE_PERIOD_MS));
+    }
+}
+
+static void tm1637_show_time_task(void *arg) {
+    (void)arg;
+    tm1637_show_time();
 }
