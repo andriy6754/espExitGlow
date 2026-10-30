@@ -3,7 +3,7 @@
 
 #include "led_strip.h"
 
-#define LED_STRIP_NUM_LEDS 16
+#define LED_STRIP_NUM_LEDS 180
 
 void configure_led_strip(void);
 
