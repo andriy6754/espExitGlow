@@ -3,12 +3,14 @@
 #endif
 #include "esp_crt_bundle.h"
 #include "esp_http_client.h"
+#include "esp_log.h"
 #include "esp_timer.h"
 #include <cJSON.h>
 #include <stdio.h>
 #include <string.h>
 
 #define BUF_SIZE (16 * 1024)
+#define TAG "air_alert"
 static const int min_interval_us = (30 * 60 * 1000000); // minimum time between API requests (30m)
 
 int temp_c = 0;
@@ -34,8 +36,11 @@ void fetch_weather_data(const char *city) {
         .timeout_ms = 10000,
     };
     esp_http_client_handle_t c = esp_http_client_init(&cfg);
+    char *buf = malloc(BUF_SIZE * sizeof(*buf));
 
-    static char buf[BUF_SIZE];
+    if (!buf) {
+        ESP_LOGE(TAG, "Failed to allocate memory for buffer");
+    }
 
     if (esp_http_client_open(c, 0) == ESP_OK) {
         esp_http_client_fetch_headers(c);
@@ -55,6 +60,7 @@ void fetch_weather_data(const char *city) {
         }
     }
     esp_http_client_cleanup(c);
+    free(buf);
 }
 
 int get_temp(const char *city) {

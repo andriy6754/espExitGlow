@@ -10,9 +10,8 @@
 #include <string.h>
 
 #define BLINK_PERIOD_MS 1000
-
-static const char TAG[] = "air_alert";
-static const char URL[] = "https://ubilling.net.ua/aerialalerts/";
+#define TAG "air_alert"
+#define URL "https://ubilling.net.ua/aerialalerts/"
 #define BUF_SIZE (16 * 1024)
 static const int min_interval_us = (1000 * 1000); // minimum time between API requests (1 s)
 
@@ -28,7 +27,12 @@ int air_alert_check(const char region[]) {
     last_call_us = now;
 
     int result = -1;
-    static char buf[BUF_SIZE]; // allocated once, reused on every call
+    char *buf = malloc(BUF_SIZE * sizeof(*buf));
+
+    if (!buf) {
+        ESP_LOGE(TAG, "Failed to allocate memory for buffer");
+        return -1;
+    }
 
     esp_http_client_config_t cfg = {
         .url = URL,
@@ -53,6 +57,7 @@ int air_alert_check(const char region[]) {
         }
     }
     esp_http_client_cleanup(c);
+    free(buf);
     last_result = result;
     return result;
 }
