@@ -7,7 +7,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-static const char *TAG = "led_strip";
+#define TAG "led_strip"
 
 void app_main(void) {
     configure_led_strip();

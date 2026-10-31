@@ -65,24 +65,17 @@ int air_alert_check(const char region[]) {
 void alert_strip_task(void *arg) {
     (void)arg;
     const char *oblast = "м. Київ";
-    led_strip_handle_t strip = get_led_strip();
 
     while (1) {
         int alert_status = air_alert_check(oblast);
 
         if (alert_status == 0) {
             // Turn all LEDs green if no alert
-            for (int i = 0; i < LED_STRIP_NUM_LEDS; i++) {
-                ESP_ERROR_CHECK(led_strip_set_pixel(strip, i, 0, 255, 0));
-            }
-            ESP_ERROR_CHECK(led_strip_refresh(strip));
+            led_set_color(0, LED_STRIP_NUM_LEDS, 0, 255, 0);
             ESP_LOGI(TAG, "LED Strip is green");
         } else if (alert_status == 1) {
             // Turn all LEDs red if there is an alert
-            for (int i = 0; i < LED_STRIP_NUM_LEDS; i++) {
-                ESP_ERROR_CHECK(led_strip_set_pixel(strip, i, 255, 0, 0));
-            }
-            ESP_ERROR_CHECK(led_strip_refresh(strip));
+            led_set_color(0, LED_STRIP_NUM_LEDS, 255, 0, 0);
             ESP_LOGI(TAG, "LED Strip is red");
         }
 

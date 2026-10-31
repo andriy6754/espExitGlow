@@ -24,7 +24,7 @@ int fetch_weather_data(const char *city) {
     // Rate limit: hit the API at most once per min_interval_us; otherwise keep cached values
     double now = esp_timer_get_time();
     if (last_call_us != 0 && now - last_call_us < min_interval_us)
-        return;
+        return -1;
     last_call_us = now;
 
     char URL[256];
@@ -62,6 +62,7 @@ int fetch_weather_data(const char *city) {
     }
     esp_http_client_cleanup(c);
     free(buf);
+    return 0;
 }
 
 int get_temp(const char *city) {

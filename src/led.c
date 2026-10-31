@@ -3,7 +3,7 @@
 
 #define LED_STRIP_GPIO_PIN 4
 
-static const char *TAG = "led_strip";
+#define TAG "led_strip"
 static led_strip_handle_t s_strip = NULL;
 
 void configure_led_strip(void) {
@@ -26,6 +26,12 @@ void configure_led_strip(void) {
     ESP_LOGI(TAG, "LED strip initialized on GPIO %d (%d LEDs)", LED_STRIP_GPIO_PIN, LED_STRIP_NUM_LEDS);
 }
 
-led_strip_handle_t get_led_strip(void) {
-    return s_strip;
+void led_set_color(unsigned int from, unsigned int to, unsigned int r, unsigned int g, unsigned int b) {
+    if (to > LED_STRIP_NUM_LEDS)
+        to = LED_STRIP_NUM_LEDS;
+
+    for (unsigned int i = from; i < to; i++) {
+        ESP_ERROR_CHECK(led_strip_set_pixel(s_strip, i, r, g, b));
+    }
+    ESP_ERROR_CHECK(led_strip_refresh(s_strip));
 }
