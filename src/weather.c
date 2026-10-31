@@ -10,7 +10,7 @@
 #include <string.h>
 
 #define BUF_SIZE (16 * 1024)
-#define TAG "air_alert"
+#define TAG "weather"
 static const int min_interval_us = (30 * 60 * 1000000); // minimum time between API requests (30m)
 
 int temp_c = 0;
@@ -18,7 +18,7 @@ int will_it_rain = 0;
 int will_it_snow = 0;
 int cloud = 0;
 
-void fetch_weather_data(const char *city) {
+int fetch_weather_data(const char *city) {
     static double last_call_us = 0; // time of last real API request
 
     // Rate limit: hit the API at most once per min_interval_us; otherwise keep cached values
@@ -40,6 +40,7 @@ void fetch_weather_data(const char *city) {
 
     if (!buf) {
         ESP_LOGE(TAG, "Failed to allocate memory for buffer");
+        return -1;
     }
 
     if (esp_http_client_open(c, 0) == ESP_OK) {
