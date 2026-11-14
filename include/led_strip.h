@@ -1,13 +1,15 @@
 #ifndef LEDSTRIP
 #define LEDSTRIP
 
-struct RGB {
+#define SIZE 8
+
+typedef struct{
 	unsigned char r;
 	unsigned char g;
 	unsigned char b;
-};
+} RGB;
 
-struct Colors {
+typedef struct{
 	struct RGB n1;
 	struct RGB n2;
 	struct RGB n3;
@@ -17,15 +19,22 @@ struct Colors {
 	struct RGB n7;
 	struct RGB n8;
 	struct RGB null;
-};
+} Colors;
 
-extern struct RGB stripArr[8][8];
+extern RGB stripArr[SIZE][SIZE];
 
-extern const struct Colors wSunny;
-extern const struct Colors wRainy;
-extern const struct Colors wSnowy;
+extern const Colors wSunny;
+extern const Colors wRainy;
+extern const Colors wSnowyNDrizzle;
 
-void changePixels(struct RGB stripArr[][8], const struct Colors *palette, int *delay);
-void updatePixels(struct RGB stripArr[][8]);
+extern const RGB rainStart[SIZE][SIZE];
+extern const RGB showerStart[SIZE][SIZE];
+extern const RGB drizzleStart[SIZE][SIZE];
+extern const RGB cloudyStart[SIZE][SIZE];
+extern const RGB sunnyStart[SIZE][SIZE];
+extern const RGB snowyStart[SIZE][SIZE];
+
+void changePixels(RGB stripArr[SIZE][SIZE], const Colors *palette, int *delay);
+void updatePixels(RGB stripArr[SIZE][SIZE]);
 
 #endif

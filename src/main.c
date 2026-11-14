@@ -2,12 +2,16 @@
 #include "../include/display.h"
 #include "../include/led.h"
 #include "../include/wifi.h"
+#include "../include/led_strip.h"
+
 #include "esp_log.h"
 #include "esp_netif_sntp.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
 #define TAG "led_strip"
+
+struct RGB stripArr[8][8] = {0};
 
 void app_main(void) {
     configure_led_strip();
