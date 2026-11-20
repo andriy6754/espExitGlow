@@ -9,6 +9,11 @@ typedef struct{
 	unsigned char b;
 } rgb_t;
 
+enum{
+	DELAY_MAX = 400;
+	DELAY_MIN = 200;
+}
+
 typedef struct{
 	rgb_t n1;
 	rgb_t n2;
