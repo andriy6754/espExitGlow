@@ -7,34 +7,33 @@ typedef struct{
 	unsigned char r;
 	unsigned char g;
 	unsigned char b;
-} RGB;
+} rgb_t;
 
 typedef struct{
-	struct RGB n1;
-	struct RGB n2;
-	struct RGB n3;
-	struct RGB n4;
-	struct RGB n5;
-	struct RGB n6;
-	struct RGB n7;
-	struct RGB n8;
-	struct RGB null;
+	rgb_t n1;
+	rgb_t n2;
+	rgb_t n3;
+	rgb_t n4;
+	rgb_t n5;
+	rgb_t n6;
+	rgb_t n7;
+	rgb_t n8;
+	rgb_t null;
 } Colors;
 
-extern RGB stripArr[SIZE][SIZE];
+extern rgb_t stripArr[SIZE][SIZE];
 
 extern const Colors wSunny;
 extern const Colors wRainy;
 extern const Colors wSnowyNDrizzle;
 
-extern const RGB rainStart[SIZE][SIZE];
-extern const RGB showerStart[SIZE][SIZE];
-extern const RGB drizzleStart[SIZE][SIZE];
-extern const RGB cloudyStart[SIZE][SIZE];
-extern const RGB sunnyStart[SIZE][SIZE];
-extern const RGB snowyStart[SIZE][SIZE];
+extern const rgb_t rainStart[SIZE][SIZE];
+extern const rgb_t showerStart[SIZE][SIZE];
+extern const rgb_t drizzleStart[SIZE][SIZE];
+extern const rgb_t cloudyStart[SIZE][SIZE];
+extern const rgb_t sunnyStart[SIZE][SIZE];
+extern const rgb_t snowyStart[SIZE][SIZE];
 
-void changePixels(RGB stripArr[SIZE][SIZE], const Colors *palette, int *delay);
-void updatePixels(RGB stripArr[SIZE][SIZE]);
-
+void changePixels(rgb_t stripArr[SIZE][SIZE], const Colors *palette, int *delay);
+void updatePixels(rgb_t stripArr[SIZE][SIZE]);
 #endif

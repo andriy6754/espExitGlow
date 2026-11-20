@@ -13,17 +13,17 @@ enum {
 	SNOW = 6
 };
 
-void fillArr(RGB stripArr[SIZE][SIZE], RGB reference[SIZE][SIZE]);
+void fillArr(rgb_t stripArr[SIZE][SIZE], rgb_t reference[SIZE][SIZE]);
 
-void sunny(RGB stripArr[SIZE][SIZE], RGB reference[SIZE][SIZE], int i);
-void cloudy(RGB stripArr[SIZE][SIZE], RGB reference[SIZE][SIZE], int i);
-void drizzle(RGB stripArr[SIZE][SIZE], RGB reference[SIZE][SIZE], int i);
-void rain(RGB stripArr[SIZE][SIZE], RGB reference[SIZE][SIZE], int i);
-void shower(RGB stripArr[SIZE][SIZE], RGB reference[SIZE][SIZE], int i);
-void thunder(RGB stripArr[SIZE][SIZE], RGB reference[SIZE][SIZE], int i);
-void snow(RGB stripArr[SIZE][SIZE], RGB reference[SIZE][SIZE], int i);
+void sunny(rgb_t stripArr[SIZE][SIZE], rgb_t reference[SIZE][SIZE], int i);
+void cloudy(rgb_t stripArr[SIZE][SIZE], rgb_t reference[SIZE][SIZE], int i);
+void drizzle(rgb_t stripArr[SIZE][SIZE], rgb_t reference[SIZE][SIZE], int i);
+void rain(rgb_t stripArr[SIZE][SIZE], rgb_t reference[SIZE][SIZE], int i);
+void shower(rgb_t stripArr[SIZE][SIZE], rgb_t reference[SIZE][SIZE], int i);
+void thunder(rgb_t stripArr[SIZE][SIZE], rgb_t reference[SIZE][SIZE], int i);
+void snow(rgb_t stripArr[SIZE][SIZE], rgb_t reference[SIZE][SIZE], int i);
 
-void changePixels(RGB stripArr[SIZE][SIZE], int mode, int *delay)
+void changePixels(rgb_t stripArr[SIZE][SIZE], int mode, int *delay)
 {
 	if (prevMode != mode && prevMode != -1){
 		i = 0;
@@ -55,9 +55,15 @@ void changePixels(RGB stripArr[SIZE][SIZE], int mode, int *delay)
 }
 
 
-void fillArr(RGB stripArr[SIZE][SIZE], RGB reference[SIZE][SIZE])
+void fillArr(rgb_t stripArr[SIZE][SIZE], rgb_t reference[SIZE][SIZE])
 {
 	for (int i = 0; i < SIZE; i++)
 		for (int j = 0; j < SIZE; j++)
 			stripArr[i][j] = reference[i][j];
+}
+
+
+void updatePixels(rgb_t stripArr[SIZE][SIZE])
+{
+	
 }

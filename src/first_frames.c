@@ -1,6 +1,6 @@
 #include "../include/led_strip.h"
 
-const RGB rainStart[SIZE][SIZE] = 
+const rgb_t rainStart[SIZE][SIZE] = 
 {
 	{wRainy.null, wRainy.null, wRainy.n3, wRainy.n3, wRainy.n4, wRainy.n4, wRainy.n5, wRainy.null},
 	{wRainy.null, wRainy.n2, wRainy.n3, wRainy.n3, wRainy.n3, wRainy.n4, wRainy.n4, wRainy.n5},
@@ -12,7 +12,7 @@ const RGB rainStart[SIZE][SIZE] =
 	{wRainy.null, wRainy.null, wRainy.null, wRainy.null, wRainy.null, wRainy.null, wRainy.null, wRainy.null},
 };
 
-const RGB showerStart[SIZE][SIZE] = 
+const rgb_t showerStart[SIZE][SIZE] = 
 {
 	{wRainy.null, wRainy.null, wRainy.n3, wRainy.n3, wRainy.n4, wRainy.n4, wRainy.n5, wRainy.null},
 	{wRainy.null, wRainy.n2, wRainy.n3, wRainy.n3, wRainy.n3, wRainy.n4, wRainy.n4, wRainy.n5},
@@ -24,7 +24,7 @@ const RGB showerStart[SIZE][SIZE] =
 	{wRainy.null, wRainy.null, wRainy.null, wRainy.null, wRainy.null, wRainy.null, wRainy.null, wRainy.null},
 };
 
-const RGB drizzleStart[SIZE][SIZE] = 
+const rgb_t drizzleStart[SIZE][SIZE] = 
 {
     {wSnowyNDrizzly.null, wSnowyNDrizzly.null, wSnowyNDrizzly.n3, wSnowyNDrizzly.n3, wSnowyNDrizzly.n4, wSnowyNDrizzly.n4, wSnowyNDrizzly.n5, wSnowyNDrizzly.null},
     {wSnowyNDrizzly.null, wSnowyNDrizzly.n2, wSnowyNDrizzly.n3, wSnowyNDrizzly.n3, wSnowyNDrizzly.n3, wSnowyNDrizzly.n4, wSnowyNDrizzly.n4, wSnowyNDrizzly.n5},
@@ -36,7 +36,7 @@ const RGB drizzleStart[SIZE][SIZE] =
     {wSnowyNDrizzly.null, wSnowyNDrizzly.null, wSnowyNDrizzly.null, wSnowyNDrizzly.null, wSnowyNDrizzly.null, wSnowyNDrizzly.null, wSnowyNDrizzly.null, wSnowyNDrizzly.null},
 };
 
-const RGB cloudyStart[SIZE][SIZE] = 
+const rgb_t cloudyStart[SIZE][SIZE] = 
 {
     {wSunny.null, wSunny.null, wSunny.null, wSunny.null, wSunny.n1, wSunny.n1, wSunny.n1, wSunny.null},
     {wSunny.null, wSunny.n5, wSunny.n5, wSunny.n1, wSunny.n1, wSunny.n2, wSunny.n1, wSunny.n1},
@@ -48,7 +48,7 @@ const RGB cloudyStart[SIZE][SIZE] =
     {wSunny.null, wSunny.null, wSunny.null, wSunny.null, wSunny.null, wSunny.null, wSunny.null, wSunny.null},
 };
 
-const RGB sunnyStart[SIZE][SIZE] = 
+const rgb_t sunnyStart[SIZE][SIZE] = 
 {
     {wSunny.null, wSunny.null, wSunny.null, wSunny.n1, wSunny.n1, wSunny.null, wSunny.null, wSunny.null},
     {wSunny.null, wSunny.null, wSunny.n1, wSunny.n1, wSunny.n2, wSunny.n1, wSunny.null, wSunny.null},
@@ -60,7 +60,7 @@ const RGB sunnyStart[SIZE][SIZE] =
     {wSunny.null, wSunny.null, wSunny.null, wSunny.n1, wSunny.n1, wSunny.null, wSunny.null, wSunny.null},
 };
 
-const RGB snowyStart[SIZE][SIZE] = 
+const rgb_t snowyStart[SIZE][SIZE] = 
 {
     {wSnowyNDrizzly.null, wSnowyNDrizzly.null, wSnowyNDrizzly.n3, wSnowyNDrizzly.n3, wSnowyNDrizzly.n4, wSnowyNDrizzly.n4, wSnowyNDrizzly.n5, wSnowyNDrizzly.null},
     {wSnowyNDrizzly.null, wSnowyNDrizzly.n2, wSnowyNDrizzly.n3, wSnowyNDrizzly.n3, wSnowyNDrizzly.n3, wSnowyNDrizzly.n4, wSnowyNDrizzly.n4, wSnowyNDrizzly.n5},
