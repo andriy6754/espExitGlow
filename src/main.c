@@ -20,6 +20,6 @@ void app_main(void) {
         ESP_LOGW(TAG, "SNTP sync timed out, time may be wrong");
     }
 
-    configASSERT(xTaskCreate(alert_strip_task, "alert_strip", 4096, NULL, 5, NULL) == pdPASS);
+    configASSERT(xTaskCreate(alert_strip_task, "alert_strip", 8192, NULL, 5, NULL) == pdPASS);
     configASSERT(xTaskCreate(tm1637_show_time_task, "tm1637_time", 2048, NULL, 5, NULL) == pdPASS);
 }
