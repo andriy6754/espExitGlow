@@ -1,5 +1,6 @@
 #include "../include/air_alert.h"
 #include "../include/led.h"
+#include "../include/audio.h"
 #include "esp_crt_bundle.h"
 #include "esp_http_client.h"
 #include "esp_log.h"
@@ -136,6 +137,7 @@ air_alert_level_t air_alert_check(const char *region) {
 void alert_strip_task(void *arg) {
     (void)arg;
     const char *region = "kyiv";
+    air_alert_level_t prev_status = AIR_ALERT_NONE;
 
     while (1) {
         air_alert_level_t alert_status = air_alert_check(region);
@@ -152,6 +154,19 @@ void alert_strip_task(void *arg) {
             // Turn all LEDs red for a red alert
             led_set_color(0, LED_STRIP_NUM_LEDS, 255, 0, 0);
             ESP_LOGI(TAG, "LED Strip is red");
+        }
+
+        bool known = (alert_status == AIR_ALERT_NONE || alert_status == AIR_ALERT_YELLOW || alert_status == AIR_ALERT_RED);
+
+        if (known) {
+            bool to_red    = (alert_status == AIR_ALERT_RED    && prev_status != AIR_ALERT_RED);
+            bool to_yellow = (alert_status == AIR_ALERT_YELLOW && prev_status == AIR_ALERT_NONE);
+            bool to_none   = (alert_status == AIR_ALERT_NONE   && prev_status != AIR_ALERT_NONE);
+
+            if (to_red || to_yellow) play_alarm();
+            if (to_none) play_cancel();
+
+            prev_status = alert_status;
         }
 
         vTaskDelay(pdMS_TO_TICKS(BLINK_PERIOD_MS));
