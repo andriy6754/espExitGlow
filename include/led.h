@@ -8,8 +8,8 @@
 
 #define LED_STRIP_NUM_LEDS 12
 
-static led_strip_handle_t s_strip1 = NULL;
-static led_strip_handle_t s_strip2 = NULL;
+extern led_strip_handle_t s_strip1;
+extern led_strip_handle_t s_strip2;
 
 void configure_led_strip(void);
 

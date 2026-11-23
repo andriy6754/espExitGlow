@@ -3,6 +3,9 @@
 
 #define TAG "led_strip"
 
+led_strip_handle_t s_strip1 = NULL;
+led_strip_handle_t s_strip2 = NULL;
+
 void configure_led_strip(void) {
     led_strip_config_t strip_config1 = {.strip_gpio_num = LED_STRIP1_GPIO_PIN,
                                        .max_leds = LED_STRIP_NUM_LEDS,
