@@ -4,7 +4,7 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-
+#include "esp_log.h"
 
 static char prevMode = -1;
 static int i = 0;
@@ -35,20 +35,21 @@ void fillArr(rgb_t stripArr[SIZE][SIZE], const rgb_t *reference[SIZE][SIZE]);
 
 void led_screen_task(void*)
 {
-	int delay;
+	int delay = DELAY_MAX;
+	ESP_LOGI("screen", "task started");
+	changePixels(stripArr, SNOW, &delay);   // draw immediately, no network
+	updatePixels(stripArr);
+	ESP_LOGI("screen", "first frame drawn");
 	while (true){
-		for (int k = 0; k < 64; k++)
-			ESP_ERROR_CHECK(led_strip_set_pixel(s_strip2, k, 40, 0, 0));
-		ESP_ERROR_CHECK(led_strip_refresh(s_strip2));
 		delay = DELAY_MAX;
-		if (get_will_it_rain(CITY) == 1)
+		/*if (get_will_it_rain(CITY) == 1)
 			mode = RAIN;
 		else if(get_will_it_snow(CITY) == 1)
 			mode = SNOW;
 		else if (get_cloud(CITY) == 1)
 			mode = CLOUDY;
 		else
-			mode = SUNNY;
+			mode = SUNNY;*/
 		changePixels(stripArr, mode, &delay);
 		updatePixels(stripArr);
 		vTaskDelay(pdMS_TO_TICKS(delay));
@@ -92,7 +93,7 @@ void changePixels(rgb_t stripArr[SIZE][SIZE], int mode, int *delay)
 			snow(stripArr, i);
 			break;
 	}*/
-	fillArr(stripArr, snowyStart);
+	fillArr(stripArr, sunnyStart);
 }
 
 
