@@ -6,4 +6,6 @@ int get_will_it_rain(const char *city);
 int get_will_it_snow(const char *city);
 int get_cloud(const char *city);
 
+#define CITY "Kyiv"
+
 #endif

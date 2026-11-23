@@ -3,7 +3,13 @@
 
 #include "led_strip.h"
 
-#define LED_STRIP_NUM_LEDS 180
+#define LED_STRIP1_GPIO_PIN 4
+#define LED_STRIP2_GPIO_PIN 5
+
+#define LED_STRIP_NUM_LEDS 12
+
+extern led_strip_handle_t s_strip1;
+extern led_strip_handle_t s_strip2;
 
 void configure_led_strip(void);
 
