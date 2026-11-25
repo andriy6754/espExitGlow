@@ -2,8 +2,8 @@
 #include "../include/display.h"
 #include "../include/led.h"
 #include "../include/wifi.h"
+#include "../include/audio.h"
 #include "../include/led_screen.h"
-
 #include "esp_log.h"
 #include "esp_netif_sntp.h"
 #include "freertos/FreeRTOS.h"
@@ -16,6 +16,7 @@ rgb_t stripArr[8][8];
 void app_main(void) {
     configure_led_strip();
     wifi_init();
+    audio_init();
 
     // Sync the system clock, otherwise time(NULL) starts at 1970 and the display shows 0200
     esp_sntp_config_t sntp_cfg = ESP_NETIF_SNTP_DEFAULT_CONFIG("pool.ntp.org");
