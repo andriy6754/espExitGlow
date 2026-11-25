@@ -12,12 +12,13 @@
 #include <stdio.h>
 #include <string.h>
 
+#define REGION_SLUG "kyiv" // Change this to your desired region
 #define BLINK_PERIOD_MS 1000
 #define TAG "air_alert"
 #define API_BASE_URL "https://tryvoha.online/api/v1/alerts"
 #define BUF_SIZE (4 * 1024)
-static const int64_t min_interval_us = (30LL * 1000 * 1000);   // API caches responses for 30-60 s
-static const int64_t error_retry_us = (5LL * 1000 * 1000);     // Retry sooner after a failed request
+static const int64_t min_interval_us = (30LL * 1000 * 1000); // API caches responses for 30-60 s
+static const int64_t error_retry_us = (5LL * 1000 * 1000);   // Retry sooner after a failed request
 
 static air_alert_level_t parse_alert_level(cJSON *root) {
     if (!root)
@@ -60,7 +61,7 @@ static air_alert_level_t parse_alert_level(cJSON *root) {
 }
 
 air_alert_level_t air_alert_check(const char *region) {
-    static int64_t last_call_us = 0;                 // time of last real API request
+    static int64_t last_call_us = 0;                        // time of last real API request
     static air_alert_level_t last_result = AIR_ALERT_ERROR; // result of last real API request
 
     if (!region || region[0] == '\0') {
@@ -140,7 +141,7 @@ void alert_strip_task(void *arg) {
     air_alert_level_t prev_status = AIR_ALERT_NONE;
 
     while (1) {
-        air_alert_level_t alert_status = air_alert_check(region);
+        air_alert_level_t alert_status = air_alert_check(REGION_SLUG);
 
         if (alert_status == AIR_ALERT_NONE) {
             // Turn all LEDs green if no alert

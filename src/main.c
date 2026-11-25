@@ -3,12 +3,15 @@
 #include "../include/led.h"
 #include "../include/wifi.h"
 #include "../include/audio.h"
+#include "../include/led_screen.h"
 #include "esp_log.h"
 #include "esp_netif_sntp.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
 #define TAG "led_strip"
+
+rgb_t stripArr[8][8];
 
 void app_main(void) {
     configure_led_strip();
@@ -24,4 +27,5 @@ void app_main(void) {
 
     configASSERT(xTaskCreate(alert_strip_task, "alert_strip", 8192, NULL, 5, NULL) == pdPASS);
     configASSERT(xTaskCreate(tm1637_show_time_task, "tm1637_time", 2048, NULL, 5, NULL) == pdPASS);
+	configASSERT(xTaskCreate(led_screen_task, "tm1637_time", 4096, NULL, 5, NULL) == pdPASS);
 }
