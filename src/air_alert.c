@@ -1,4 +1,5 @@
 #include "../include/air_alert.h"
+#include "../include/audio.h"
 #include "../include/led.h"
 #include "esp_crt_bundle.h"
 #include "esp_http_client.h"
@@ -16,8 +17,8 @@
 #define TAG "air_alert"
 #define API_BASE_URL "https://tryvoha.online/api/v1/alerts"
 #define BUF_SIZE (4 * 1024)
-static const int64_t min_interval_us = (30LL * 1000 * 1000); // API caches responses for 30-60 s
-static const int64_t error_retry_us = (5LL * 1000 * 1000);   // Retry sooner after a failed request
+static const int64_t min_interval_us = (30 * 1000 * 1000); // API caches responses for 30s
+static const int64_t error_retry_us = (5 * 1000 * 1000);   // Retry sooner after a failed request
 
 static air_alert_level_t parse_alert_level(cJSON *root) {
     if (!root)
@@ -136,22 +137,42 @@ air_alert_level_t air_alert_check(const char *region) {
 
 void alert_strip_task(void *arg) {
     (void)arg;
+    air_alert_level_t prev_status = AIR_ALERT_NONE;
+    rgb_t green = {0, 255, 0};
+    rgb_t yellow = {255, 255, 0};
+    rgb_t red = {255, 0, 0};
 
     while (1) {
         air_alert_level_t alert_status = air_alert_check(REGION_SLUG);
 
         if (alert_status == AIR_ALERT_NONE) {
             // Turn all LEDs green if no alert
-            led_set_color(0, LED_STRIP_NUM_LEDS, 0, 255, 0);
+            led_set_color(0, LED_STRIP_NUM_LEDS, green);
             ESP_LOGI(TAG, "LED Strip is green");
         } else if (alert_status == AIR_ALERT_YELLOW) {
             // Turn all LEDs yellow for a yellow alert (drone threat)
-            led_set_color(0, LED_STRIP_NUM_LEDS, 255, 255, 0);
+            led_set_color(0, LED_STRIP_NUM_LEDS, yellow);
             ESP_LOGI(TAG, "LED Strip is yellow");
         } else if (alert_status == AIR_ALERT_RED) {
             // Turn all LEDs red for a red alert
-            led_set_color(0, LED_STRIP_NUM_LEDS, 255, 0, 0);
+            led_set_color(0, LED_STRIP_NUM_LEDS, red);
             ESP_LOGI(TAG, "LED Strip is red");
+        }
+
+        bool known =
+            (alert_status == AIR_ALERT_NONE || alert_status == AIR_ALERT_YELLOW || alert_status == AIR_ALERT_RED);
+
+        if (known) {
+            bool to_red = (alert_status == AIR_ALERT_RED && prev_status != AIR_ALERT_RED);
+            bool to_yellow = (alert_status == AIR_ALERT_YELLOW && prev_status == AIR_ALERT_NONE);
+            bool to_none = (alert_status == AIR_ALERT_NONE && prev_status != AIR_ALERT_NONE);
+
+            if (to_red || to_yellow)
+                play_alarm();
+            if (to_none)
+                play_cancel();
+
+            prev_status = alert_status;
         }
 
         vTaskDelay(pdMS_TO_TICKS(BLINK_PERIOD_MS));
