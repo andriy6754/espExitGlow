@@ -12,7 +12,7 @@ const rgb_t *rainStart[SIZE][SIZE] =
 	{&wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null},
 };
 
-const rgb_t *showerStart[SIZE][SIZE] = 
+/*const rgb_t *showerStart[SIZE][SIZE] = 
 {
 	{&wRainy.null, &wRainy.null, &wRainy.n3, &wRainy.n3, &wRainy.n4, &wRainy.n4, &wRainy.n5, &wRainy.null},
 	{&wRainy.null, &wRainy.n2, &wRainy.n3, &wRainy.n3, &wRainy.n3, &wRainy.n4, &wRainy.n4, &wRainy.n5},
@@ -22,9 +22,9 @@ const rgb_t *showerStart[SIZE][SIZE] =
 	{&wRainy.n6, &wRainy.null, &wRainy.null, &wRainy.n6, &wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null},
 	{&wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null},
 	{&wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null, &wRainy.null},
-};
+};*/
 
-const rgb_t *drizzleStart[SIZE][SIZE] = 
+/*const rgb_t *drizzleStart[SIZE][SIZE] = 
 {
     {&wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.n3, &wSnowyNDrizzly.n3, &wSnowyNDrizzly.n4, &wSnowyNDrizzly.n4, &wSnowyNDrizzly.n5, &wSnowyNDrizzly.null},
     {&wSnowyNDrizzly.null, &wSnowyNDrizzly.n2, &wSnowyNDrizzly.n3, &wSnowyNDrizzly.n3, &wSnowyNDrizzly.n3, &wSnowyNDrizzly.n4, &wSnowyNDrizzly.n4, &wSnowyNDrizzly.n5},
@@ -34,30 +34,30 @@ const rgb_t *drizzleStart[SIZE][SIZE] =
     {&wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.n6, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null},
     {&wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null},
     {&wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null, &wSnowyNDrizzly.null},
-};
+};*/
 
 const rgb_t *cloudyStart[SIZE][SIZE] = 
 {
-    {&wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.null},
-    {&wSunny.null, &wSunny.n5, &wSunny.n5, &wSunny.n1, &wSunny.n1, &wSunny.n2, &wSunny.n1, &wSunny.n1},
-    {&wSunny.n6, &wSunny.n5, &wSunny.n5, &wSunny.n1, &wSunny.n2, &wSunny.n1, &wSunny.n1, &wSunny.n1},
-    {&wSunny.n6, &wSunny.n5, &wSunny.n5, &wSunny.n5, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1},
-    {&wSunny.n6, &wSunny.n5, &wSunny.n5, &wSunny.n5, &wSunny.n5, &wSunny.n1, &wSunny.n5, &wSunny.n5},
-    {&wSunny.n6, &wSunny.n5, &wSunny.n5, &wSunny.n5, &wSunny.n5, &wSunny.n5, &wSunny.n5, &wSunny.n5},
-    {&wSunny.null, &wSunny.n5, &wSunny.n5, &wSunny.n5, &wSunny.n5, &wSunny.null, &wSunny.n5, &wSunny.n5},
+    {&wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null, &wSunny.n4, &wSunny.n4, &wSunny.n4, &wSunny.null},
+    {&wSunny.null, &wSunny.n5, &wSunny.n5, &wSunny.n4, &wSunny.n4, &wSunny.n2, &wSunny.n4, &wSunny.n4},
+    {&wSunny.n6, &wSunny.n5, &wSunny.n5, &wSunny.n4, &wSunny.n4, &wSunny.n4, &wSunny.n2, &wSunny.n4},
+    {&wSunny.n6, &wSunny.n5, &wSunny.n5, &wSunny.n5, &wSunny.n4, &wSunny.n4, &wSunny.n4, &wSunny.n4},
+    {&wSunny.n6, &wSunny.n6, &wSunny.n5, &wSunny.n5, &wSunny.n5, &wSunny.n4, &wSunny.n4, &wSunny.n5},
+    {&wSunny.n6, &wSunny.n6, &wSunny.n6, &wSunny.n5, &wSunny.n5, &wSunny.n5, &wSunny.n5, &wSunny.n5},
+    {&wSunny.null, &wSunny.n6, &wSunny.n6, &wSunny.n6, &wSunny.n5, &wSunny.n6, &wSunny.n6, &wSunny.n6},
     {&wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null},
 };
 
 const rgb_t *sunnyStart[SIZE][SIZE] = 
 {
+    {&wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null},
     {&wSunny.null, &wSunny.null, &wSunny.null, &wSunny.n1, &wSunny.n1, &wSunny.null, &wSunny.null, &wSunny.null},
     {&wSunny.null, &wSunny.null, &wSunny.n1, &wSunny.n1, &wSunny.n2, &wSunny.n1, &wSunny.null, &wSunny.null},
     {&wSunny.null, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n2, &wSunny.n1, &wSunny.null},
-    {&wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1},
-    {&wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1},
     {&wSunny.null, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.null},
     {&wSunny.null, &wSunny.null, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.n1, &wSunny.null, &wSunny.null},
     {&wSunny.null, &wSunny.null, &wSunny.null, &wSunny.n1, &wSunny.n1, &wSunny.null, &wSunny.null, &wSunny.null},
+    {&wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null, &wSunny.null},
 };
 
 const rgb_t *snowyStart[SIZE][SIZE] = 

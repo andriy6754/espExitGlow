@@ -25,8 +25,8 @@ extern const Colors wRainy;
 extern const Colors wSnowyNDrizzly;
 
 extern const rgb_t *rainStart[SIZE][SIZE];
-extern const rgb_t *showerStart[SIZE][SIZE];
-extern const rgb_t *drizzleStart[SIZE][SIZE];
+//extern const rgb_t *showerStart[SIZE][SIZE];
+//extern const rgb_t *drizzleStart[SIZE][SIZE];
 extern const rgb_t *cloudyStart[SIZE][SIZE];
 extern const rgb_t *sunnyStart[SIZE][SIZE];
 extern const rgb_t *snowyStart[SIZE][SIZE];
