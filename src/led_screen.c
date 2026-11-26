@@ -21,13 +21,25 @@ enum {
 	SNOW = 6
 };
 
-void sunny(rgb_t stripArr[SIZE][SIZE], int i);
-void cloudy(rgb_t stripArr[SIZE][SIZE], int i);
-void drizzle(rgb_t stripArr[SIZE][SIZE], int i);
-void rain(rgb_t stripArr[SIZE][SIZE], int i);
-void shower(rgb_t stripArr[SIZE][SIZE], int i);
-void thunder(rgb_t stripArr[SIZE][SIZE], int i);
-void snow(rgb_t stripArr[SIZE][SIZE], int i);
+typedef struct {
+    int x;
+    int y;
+} Coords;
+
+const Coords sunnyCoords[8] = {
+    {0, 2}, {0, 5},
+    {2, 0}, {2, 7},
+    {5, 0}, {5, 7},
+    {7, 2}, {7, 5}
+};
+
+void sunny(rgb_t stripArr[SIZE][SIZE], int *i);
+void cloudy(rgb_t stripArr[SIZE][SIZE], int *i);
+//void drizzle(rgb_t stripArr[SIZE][SIZE], int *i);
+void rain(rgb_t stripArr[SIZE][SIZE], int *i);
+//void shower(rgb_t stripArr[SIZE][SIZE], int *i);
+//void thunder(rgb_t stripArr[SIZE][SIZE], int *i);
+void snow(rgb_t stripArr[SIZE][SIZE], int *i);
 
 void changePixels(rgb_t stripArr[SIZE][SIZE], int mode, int *delay);
 void updatePixels(rgb_t stripArr[SIZE][SIZE]);
@@ -42,14 +54,14 @@ void led_screen_task(void*)
 	ESP_LOGI("screen", "first frame drawn");
 	while (true){
 		delay = DELAY_MAX;
-		/*if (get_will_it_rain(CITY) == 1)
+		if (get_will_it_rain(CITY) == 1)
 			mode = RAIN;
 		else if(get_will_it_snow(CITY) == 1)
 			mode = SNOW;
 		else if (get_cloud(CITY) == 1)
 			mode = CLOUDY;
 		else
-			mode = SUNNY;*/
+			mode = SUNNY;
 		changePixels(stripArr, mode, &delay);
 		updatePixels(stripArr);
 		vTaskDelay(pdMS_TO_TICKS(delay));
@@ -63,37 +75,36 @@ void changePixels(rgb_t stripArr[SIZE][SIZE], int mode, int *delay)
 		prevMode = mode;
 	}
 	
-	/*switch (mode){
+	switch (mode){
 		case SUNNY:
-			if (i == 0) {fillArr(stripArr, sunnyStart); break;}
-			sunny(stripArr, i);
+			if (i == 0) {fillArr(stripArr, sunnyStart);}
+			sunny(stripArr, &i);
 			break;
 		case CLOUDY:
-			if (i == 0) {fillArr(stripArr, cloudyStart); break;}
-			cloudy(stripArr, i);
+			if (i == 0) {fillArr(stripArr, cloudyStart);}
+			cloudy(stripArr, &i);
 			break;
-		case DRIZZLE:
-			if (i == 0) {fillArr(stripArr, drizzleStart); break;}
-			drizzle(stripArr, i);
-			break;
+		/*case DRIZZLE:
+			if (i == 0) {fillArr(stripArr, drizzleStart);}
+			drizzle(stripArr, &i);
+			break;*/
 		case RAIN:
-			if (i == 0) {fillArr(stripArr, rainStart); break;}
-			rain(stripArr, i);
+			if (i == 0) {fillArr(stripArr, rainStart);}
+			rain(stripArr, &i);
 			break;
-		case SHOWER:
-			if (i == 0) {fillArr(stripArr, showerStart); break;}
-			shower(stripArr, i);
-			break;
-		case THUNDER:
-			if (i == 0) {fillArr(stripArr, showerStart); break;}
-			thunder(stripArr, i);
-			break;
+		/*case SHOWER:
+			if (i == 0) {fillArr(stripArr, showerStart);}
+			shower(stripArr, &i);
+			break;*/
+		/*case THUNDER:
+			if (i == 0) {fillArr(stripArr, showerStart);}
+			thunder(stripArr, &i);
+			break;*/
 		case SNOW:
-			if (i == 0) {fillArr(stripArr, snowyStart); break;}
-			snow(stripArr, i);
+			if (i == 0) {fillArr(stripArr, snowyStart);}
+			snow(stripArr, &i);
 			break;
-	}*/
-	fillArr(stripArr, sunnyStart);
+	}
 }
 
 
@@ -108,17 +119,39 @@ void fillArr(rgb_t stripArr[SIZE][SIZE], const rgb_t *reference[SIZE][SIZE])
 void updatePixels(rgb_t stripArr[SIZE][SIZE])
 {
 	for (int i = 0; i < 64; i++){
-		int j = i / 8;
-		int z = i % 8;
-		ESP_ERROR_CHECK(led_strip_set_pixel(s_strip2, i, stripArr[j][z].r, stripArr[j][z].g, stripArr[j][z].b));
+		int y = i / 8;
+		int reverseState = y % 2;
+		int x;
+		if (reverseState)
+			x = 7 - (i % 8);
+		else
+			x = i % 8;
+		ESP_ERROR_CHECK(led_strip_set_pixel(s_strip2, i, stripArr[y][x].r, stripArr[y][x].g, stripArr[y][x].b));
 	}
 	ESP_ERROR_CHECK(led_strip_refresh(s_strip2));
 }
 
-void sunny(rgb_t stripArr[SIZE][SIZE], int i){}
-void cloudy(rgb_t stripArr[SIZE][SIZE], int i){}
-void drizzle(rgb_t stripArr[SIZE][SIZE], int i){}
-void rain(rgb_t stripArr[SIZE][SIZE], int i){}
-void shower(rgb_t stripArr[SIZE][SIZE], int i){}
-void thunder(rgb_t stripArr[SIZE][SIZE], int i){}
-void snow(rgb_t stripArr[SIZE][SIZE], int i){}
+void sunny(rgb_t stripArr[SIZE][SIZE], int *i)
+{
+	switch (*i){
+		case 0:
+			for (int i = 0; i < 8; i++)
+				stripArr[sunnyCoords[i].x][sunnyCoords[i].y] = wSunny.null;
+			break;
+		case 1:
+			for (int i = 0; i < 8; i++)
+				stripArr[sunnyCoords[i].x][sunnyCoords[i].y] = wSunny.n3;
+			break;
+		case 2:
+			stripArr[3][4] = wSunny.n2;
+			break;
+		case 3:
+			stripArr[3][4] = wSunny.n1;
+			break;
+	}
+	if (++*i == 4) 
+		*i = 0;
+}
+void cloudy(rgb_t stripArr[SIZE][SIZE], int *i){}
+void rain(rgb_t stripArr[SIZE][SIZE], int *i){}
+void snow(rgb_t stripArr[SIZE][SIZE], int *i){}

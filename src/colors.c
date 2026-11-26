@@ -1,12 +1,12 @@
 #include "../include/led_screen.h"
 
 const Colors wSunny = {
-	{255, 249, 66}, // sun main color
+	{255, 230, 33}, // sun main color
 	{255, 255, 255}, // white
-	{255, 233, 189}, // sun traces (duno how it called)
+	{255, 230, 66}, // sun traces (duno how it called)
 	{255, 251, 145}, // sun secondary color
-	{233, 237, 242}, // clouds main color
-	{211, 220, 230}, // color secondary color
+	{233, 237, 242}, // cloud main color
+	{211, 220, 230}, // cloud secondary color
 	{0, 0, 0},
 	{0, 0, 0},
 	{0, 0, 0}

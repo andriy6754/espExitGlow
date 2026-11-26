@@ -11,7 +11,7 @@
 
 #define BUF_SIZE (16 * 1024)
 #define TAG "weather"
-static const int min_interval_us = (30 * 60 * 1000000); // minimum time between API requests (30m)
+static const int min_interval_us = (15 * 60 * 1000000); // minimum time between API requests (15m)
 
 int temp_c = 0;
 int will_it_rain = 0;
