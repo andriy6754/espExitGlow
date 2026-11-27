@@ -82,5 +82,9 @@ int get_will_it_snow(const char *city) {
 
 int get_cloud(const char *city) {
     fetch_weather_data(city);
-    return cloud;
+    if (cloud >= 50) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
