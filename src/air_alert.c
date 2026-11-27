@@ -1,13 +1,16 @@
 #include "../include/air_alert.h"
 #include "../include/audio.h"
+#include "../include/demo.h"
 #include "../include/led.h"
+#if !DEMO_MODE
 #include "esp_crt_bundle.h"
 #include "esp_http_client.h"
+#include <cJSON.h>
+#endif
 #include "esp_log.h"
 #include "esp_timer.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include <cJSON.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -15,6 +18,7 @@
 #define REGION_SLUG "kyiv" // Change this to your desired region
 #define BLINK_PERIOD_MS 1000
 #define TAG "air_alert"
+#if !DEMO_MODE
 #define API_BASE_URL "https://tryvoha.online/api/v1/alerts"
 #define BUF_SIZE (4 * 1024)
 static const int64_t min_interval_us = (30 * 1000 * 1000); // API caches responses for 30s
@@ -59,8 +63,32 @@ static air_alert_level_t parse_alert_level(cJSON *root) {
     // Fallback: active is true but level wasn't recognized — default to red
     return highest != AIR_ALERT_NONE ? highest : AIR_ALERT_RED;
 }
+#endif
 
 air_alert_level_t air_alert_check(const char *region) {
+#if DEMO_MODE
+    (void)region;
+    static const air_alert_level_t levels[] = {
+        AIR_ALERT_NONE,
+        AIR_ALERT_YELLOW,
+        AIR_ALERT_RED,
+    };
+    static const char *const level_names[] = {"none (green)", "yellow", "red"};
+    static int64_t last_call_us = 0;
+    static int last_idx = -1;
+    static air_alert_level_t last_result = AIR_ALERT_NONE;
+
+    int64_t now = esp_timer_get_time();
+    if (last_call_us != 0 && now - last_call_us < DEMO_INTERVAL_US)
+        return last_result;
+    last_call_us = now;
+
+    int count = (int)(sizeof(levels) / sizeof(levels[0]));
+    last_idx = demo_pick_other_index(last_idx, count);
+    last_result = levels[last_idx];
+    ESP_LOGI(TAG, "[DEMO] Air alert -> %s", level_names[last_idx]);
+    return last_result;
+#else
     static int64_t last_call_us = 0;                        // time of last real API request
     static air_alert_level_t last_result = AIR_ALERT_ERROR; // result of last real API request
 
@@ -133,6 +161,7 @@ air_alert_level_t air_alert_check(const char *region) {
     free(buf);
     last_result = result;
     return result;
+#endif
 }
 
 void alert_strip_task(void *arg) {
