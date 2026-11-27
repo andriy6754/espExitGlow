@@ -8,8 +8,8 @@
 
 static EventGroupHandle_t s_wifi_eg;
 #define WIFI_CONNECTED_BIT BIT0
-#define WIFI_SSID "404"
-#define WIFI_PASS "ItsMyLife"
+#define WIFI_SSID "Wokwi-GUEST"
+#define WIFI_PASS ""
 static void wifi_evt(void *arg, esp_event_base_t base, int32_t id, void *data) {
     if (base == WIFI_EVENT && id == WIFI_EVENT_STA_START)
         esp_wifi_connect();
