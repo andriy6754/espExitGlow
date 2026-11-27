@@ -16,7 +16,19 @@
       "top": -80,
       "left": 120,
       "attrs": {
-        "pixels": "180",
+        "pixels": "12",
+        "pixelShape": "circle"
+      }
+    },
+    {
+      "type": "wokwi-led-matrix",
+      "id": "matrix1",
+      "top": 10,
+      "left": 180,
+      "attrs": {
+        "rows": "8",
+        "cols": "8",
+        "layout": "serpentine",
         "pixelShape": "circle"
       }
     },
@@ -24,8 +36,10 @@
       "type": "wokwi-tm1637-7segment",
       "id": "display1",
       "top": 100,
-      "left": -200,
-      "attrs": {}
+      "left": -220,
+      "attrs": {
+        "type": "colon"
+      }
     }
   ],
   "connections": [
@@ -34,6 +48,9 @@
     [ "esp:5V", "strip1:VDD", "red", [ "v0" ] ],
     [ "esp:GND.1", "strip1:VSS", "black", [ "v0" ] ],
     [ "esp:4", "strip1:DIN", "green", [ "h0" ] ],
+    [ "esp:5V", "matrix1:VDD", "red", [ "v0" ] ],
+    [ "esp:GND.3", "matrix1:VSS", "black", [ "v0" ] ],
+    [ "esp:5", "matrix1:DIN", "purple", [ "h0" ] ],
     [ "esp:5V", "display1:VCC", "red", [ "v0" ] ],
     [ "esp:GND.2", "display1:GND", "black", [ "v0" ] ],
     [ "esp:16", "display1:CLK", "blue", [ "h0" ] ],
