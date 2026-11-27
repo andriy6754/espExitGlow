@@ -1,9 +1,9 @@
 #include "../include/air_alert.h"
+#include "../include/audio.h"
 #include "../include/display.h"
 #include "../include/led.h"
-#include "../include/wifi.h"
-#include "../include/audio.h"
 #include "../include/led_screen.h"
+#include "../include/wifi.h"
 #include "esp_log.h"
 #include "esp_netif_sntp.h"
 #include "freertos/FreeRTOS.h"
@@ -15,13 +15,13 @@ rgb_t stripArr[8][8];
 
 void app_main(void) {
     configure_led_strip();
-    bool wifi_connected = wifi_init();
+    wifi_init();
     audio_init();
 
     // Sync the system clock, otherwise time(NULL) starts at 1970 and the display shows 0200
     esp_sntp_config_t sntp_cfg = ESP_NETIF_SNTP_DEFAULT_CONFIG("pool.ntp.org");
     ESP_ERROR_CHECK(esp_netif_sntp_init(&sntp_cfg));
-    if (wifi_connected && esp_netif_sntp_sync_wait(pdMS_TO_TICKS(15000)) != ESP_OK) {
+    if (esp_netif_sntp_sync_wait(pdMS_TO_TICKS(15000)) != ESP_OK) {
         ESP_LOGW(TAG, "SNTP sync timed out, time may be wrong");
     }
 
