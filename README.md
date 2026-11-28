@@ -127,30 +127,41 @@ The repository includes `wokwi.toml` and `diagram.json` along with `sdkconfig.de
 
 ```text
 espExitGlow/
-├── CMakeLists.txt          # Top-level ESP-IDF CMake configuration
-├── sdkconfig.defaults      # ESP32 target & mbedTLS / Wokwi defaults
-├── .env.example            # Template for WEATHER_API_KEY
-├── diagram.json            # Wokwi circuit diagram
-├── wokwi.toml              # Wokwi firmware/ELF configuration
+├── .clang-format              # C/C++ formatting rules
+├── .env.example               # Template for WEATHER_API_KEY
+├── .gitignore                 # Git exclusions for local config & build artifacts
+├── CMakeLists.txt             # Top-level ESP-IDF CMake configuration
+├── README.md                  # Project documentation
+├── dependencies.lock          # Locked ESP-IDF & managed component versions
+├── diagram.json               # Wokwi circuit diagram
+├── partitions.csv             # NVS, PHY & factory app partition layout
+├── sdkconfig.defaults         # ESP32 target & mbedTLS / Wokwi defaults
+├── wokwi.toml                 # Wokwi firmware/ELF configuration
 ├── include/
-│   ├── air_alert.h         # Air alert levels & task interface
-│   ├── clock.h             # UTC+2 hour/minute getters
-│   ├── display.h           # TM1637 clock display task
-│   ├── led.h               # WS2812 pinout & LED strip helpers
-│   ├── led_screen.h        # 8×8 weather screen types, palettes & frames
-│   ├── weather.h           # WeatherAPI getters & city config
-│   └── wifi.h              # Wi-Fi station init
+│   ├── air_alert.h            # Air alert levels & task interface
+│   ├── alarm.h                # Embedded alarm PCM samples & sample rate
+│   ├── animation_instructions.h # Coordinate tables for weather animations
+│   ├── audio.h                # I2S audio init & alarm/cancel playback interface
+│   ├── cancel.h               # Embedded alert-cancellation PCM samples & sample rate
+│   ├── clock.h                # UTC+2 hour/minute getters
+│   ├── display.h              # TM1637 clock display task
+│   ├── led.h                  # WS2812 pinout & LED strip helpers
+│   ├── led_screen.h           # 8×8 weather screen types, palettes & frames
+│   ├── weather.h              # WeatherAPI getters & city config
+│   └── wifi.h                 # Wi-Fi station init
 └── src/
-    ├── CMakeLists.txt      # Component registration & .env loader
-    ├── idf_component.yml   # Managed component dependencies
-    ├── main.c              # Entry point: LED init, Wi-Fi, SNTP, FreeRTOS tasks
-    ├── air_alert.c         # Tryvoha.online HTTPS client & alert LED task
-    ├── clock.c             # Time conversion from system epoch
-    ├── display.c           # TM1637 HH:MM rendering task
-    ├── led.c               # RMT WS2812 initialization & pixel control
-    ├── led_screen.c        # 8×8 weather animation task
-    ├── colors.c            # RGB color palettes for weather scenes
-    ├── first_frames.c      # Initial 8×8 pixel-art frames (rain, snow, sun, etc.)
-    ├── weather.c           # WeatherAPI HTTPS client with 30-min caching
-    └── wifi.c              # ESP-IDF Wi-Fi STA connection handler
+    ├── CMakeLists.txt         # Component registration & .env loader
+    ├── idf_component.yml      # Managed component dependencies
+    ├── main.c                 # Entry point: LEDs, Wi-Fi, audio, SNTP & FreeRTOS tasks
+    ├── air_alert.c            # Tryvoha.online HTTPS client, alert LEDs & sound triggers
+    ├── animation_instructions.c # Coordinate tables for sun & cloud animation steps
+    ├── audio.c                # I2S PCM playback for alarm & cancellation sounds
+    ├── clock.c                # Time conversion from system epoch
+    ├── colors.c               # RGB color palettes for weather scenes
+    ├── display.c              # TM1637 HH:MM rendering task
+    ├── first_frames.c         # Initial 8×8 pixel-art frames
+    ├── led.c                  # RMT WS2812 initialization & pixel control
+    ├── led_screen.c           # 8×8 weather animation task
+    ├── weather.c              # WeatherAPI HTTPS client with cached readings
+    └── wifi.c                 # ESP-IDF Wi-Fi STA connection handler
 ```
