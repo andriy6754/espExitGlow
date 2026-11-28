@@ -2,7 +2,7 @@
 
 An ESP32-based smart status board built with **ESP-IDF** and **FreeRTOS** that gives you an at-a-glance summary before heading out the door:
 
-- **Weather Animations** — Displays pixel-art weather scenes (sunny, cloudy, drizzle, rain, shower, thunder, snow) on an 8×8 WS2812 RGB LED matrix/strip using [WeatherAPI](https://www.weatherapi.com/).
+- **Weather Animations** — Displays pixel-art weather scenes (sunny, cloudy, rain, snow) on an 8×8 WS2812 RGB LED matrix/strip using [WeatherAPI](https://www.weatherapi.com/).
 - **Live Digital Clock** — Shows the current time (`HH:MM`) on a TM1637 4-digit 7-segment display, synced via SNTP (`pool.ntp.org`).
 - **Air Raid Alert Indicator** — Polls real-time Ukrainian air raid alerts from [tryvoha.online](https://tryvoha.online) and lights up a WS2812 RGB LED strip by alert level.
 
@@ -13,7 +13,7 @@ An ESP32-based smart status board built with **ESP-IDF** and **FreeRTOS** that g
 | Module | Output Hardware | Data Source | Update Interval |
 | --- | --- | --- | --- |
 | **Air Alert** | 12-LED WS2812 strip | `https://tryvoha.online/api/v1/alerts/<region>` | Every 30 s (5 s retry on error) |
-| **Weather** | 64-LED (8×8) WS2812 matrix/strip | `https://api.weatherapi.com/v1/current.json` | Every 30 min (cached) |
+| **Weather** | 64-LED (8×8) WS2812 matrix/strip | `https://api.weatherapi.com/v1/current.json` | Every 15 min (cached) |
 | **Clock** | TM1637 4-digit 7-segment display | SNTP (`pool.ntp.org`, UTC+2) | Every 1 s |
 
 ### Air Alert Color Coding
